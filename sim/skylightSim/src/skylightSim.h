@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "Puddle.h"
 
 class skylightSim : public ofBaseApp{
 
@@ -32,5 +33,5 @@ private:
 	uint ux;
 	uint uy;
 	bool whitening;
-
+	Puddle puddle;
 };

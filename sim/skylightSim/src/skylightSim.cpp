@@ -1,33 +1,42 @@
 #include "skylightSim.h"
 
 //--------------------------------------------------------------
-void skylightSim::setup(){
+void skylightSim::setup()
+{
 	ofSetFrameRate(60); // if vertical sync is off, we can go a bit fast... this caps the framerate at 60fps.
 	memset(leds, 0xff, sizeof(leds));
 	whitening = false;
+	puddle.set_pixel(0xfc, 0x0, 0xff, 0xff, 30, 30);
 }
 
 //--------------------------------------------------------------
 void skylightSim::update(){
 	// update pattern
-	leds[uy][ux][1] = whitening ? 0xff : 0;
-	if(++ux == leds_width) {
-		ux = 0;
-		if(++uy == leds_width) {
-			uy = 0;
-		}
-	}
-	if(ux == 0 && uy == 0) {
-		whitening = !whitening;
-	}
+	// 0 = C
+	// 1 = M
+	// 2 = Y
+	// 3 = K
 
+//	leds[uy][ux][0] = whitening ? 0xff : 0;
+//	if(++ux == leds_width) {
+//		ux = 0;
+//		if(++uy == leds_width) {
+//			uy = 0;
+//		}
+//	}
+//	if(ux == 0 && uy == 0) {
+//		whitening = !whitening;
+//	}
+
+	puddle.tick();
 }
 
 //--------------------------------------------------------------
 void skylightSim::draw(){
 	// update image from leds
 	image.setFromPixels(
-			&(leds[0][0][0]),
+//			&(leds[0][0][0]),
+			puddle.get_led_representation(),
 			leds_width,
 			leds_height,
 			OF_IMAGE_COLOR_ALPHA,
