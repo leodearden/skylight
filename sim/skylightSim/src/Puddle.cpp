@@ -40,7 +40,7 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 {
 	float averagePosition[colour_width] = {0};
 	float propagationConstants[colour_width] = {0.1,0.1,0.1}; // RGB
-	float dampingConstants[colour_width] = {0.1,0.1,0.1}; // RGB
+	float dampingConstants[colour_width] = {0.001,0.001,0.001}; // RGB
 
 	for (int kX = -1; kX <= 1; kX ++)
 	{
@@ -63,7 +63,7 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 	for (int i = 0; i < colour_width; i++)
 	{
 		averagePosition[i] /= 8;
-		float acceleration = input[x][y][i] - averagePosition[i] * propagationConstants[i];
+		float acceleration = (averagePosition[i] - input[x][y][i]) * propagationConstants[i];
 		velocity[x][y][i] += acceleration - (velocity[x][y][i] * dampingConstants[i]);
 		output[x][y][i] = input[x][y][i] + velocity[x][y][i];
 	}
@@ -71,11 +71,11 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 }
 
 
-void Puddle::set_pixel(PixelType C, PixelType M, PixelType Y, uint x, uint y)
+void Puddle::set_pixel(float R, float G, float B, uint x, uint y)
 {
-	colour_map[y][x][0] = C;
-	colour_map[y][x][1] = M;
-	colour_map[y][x][2] = Y;
+	colour_map[y][x][0] = R;
+	colour_map[y][x][1] = G;
+	colour_map[y][x][2] = B;
 }
 
 void Puddle::update_buffers()

@@ -21,7 +21,7 @@ public:
 	virtual ~Puddle();
 	void tick();
 	PixelType *get_led_representation();
-	void set_pixel(PixelType C, PixelType M, PixelType Y, uint x, uint y);
+	void set_pixel(float R, float G, float B, uint x, uint y);
 
 private:
 	void propagate(float input[leds_height][leds_width][colour_width],
