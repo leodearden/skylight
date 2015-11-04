@@ -11,13 +11,6 @@ void skylightSim::setup()
 
 //--------------------------------------------------------------
 void skylightSim::update(){
-	// update pattern
-	// 0 = C
-	// 1 = M
-	// 2 = Y
-	// 3 = K
-
-
 	puddle.tick();
 }
 

@@ -70,22 +70,6 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 
 }
 
-void Puddle::accelerate(float* pixel, float* velocity)
-{
-	float freq = 0.1;
-	float f1 = (2 * 3.14 * freq);
-
-	for (uint colour = 0; colour < colour_width; colour++)
-	{
-		float val = pixel[colour];
-		float x = val > 0 ? val : val * -1;
-		float a = -1 * f1 * f1 * val;
-
-		velocity[colour] += a;
-
-		pixel[colour] += velocity[colour];
-	}
-}
 
 void Puddle::set_pixel(PixelType C, PixelType M, PixelType Y, uint x, uint y)
 {
