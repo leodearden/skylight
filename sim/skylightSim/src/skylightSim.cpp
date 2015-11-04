@@ -17,16 +17,6 @@ void skylightSim::update(){
 	// 2 = Y
 	// 3 = K
 
-//	leds[uy][ux][0] = whitening ? 0xff : 0;
-//	if(++ux == leds_width) {
-//		ux = 0;
-//		if(++uy == leds_width) {
-//			uy = 0;
-//		}
-//	}
-//	if(ux == 0 && uy == 0) {
-//		whitening = !whitening;
-//	}
 
 	puddle.tick();
 }
@@ -35,7 +25,6 @@ void skylightSim::update(){
 void skylightSim::draw(){
 	// update image from leds
 	image.setFromPixels(
-//			&(leds[0][0][0]),
 			puddle.get_led_representation(),
 			leds_width,
 			leds_height,

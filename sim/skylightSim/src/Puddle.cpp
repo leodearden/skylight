@@ -21,7 +21,6 @@ void Puddle::tick()
 		for (uint x = 0; x < leds_width; x++)
 		{
 			propagate(colour_map, result, velocity_map, x, y);
-			//accelerate(colour_map[y][x], velocity_map[y][x]);
 		}
 	update_buffers();
 }
