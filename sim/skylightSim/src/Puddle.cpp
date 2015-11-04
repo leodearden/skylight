@@ -38,9 +38,14 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 					   uint x,
 					   uint y)
 {
-	float averagePosition[colour_width] = {0};
+	float force[colour_width] = {0};
+	float springStiffness[3][3] = {
+			{0.10355, 0.14644, 0.10355},
+			{0.14644, 0, 0.14644},
+			{0.10355, 0.14644, 0.10355}
+	};
 	float propagationConstants[colour_width] = {0.11,0.1,0.09}; // RGB
-	float dampingConstants[colour_width] = {0.001,0.001,0.001}; // RGB
+	float dampingConstants[colour_width] = {0.5,0.5,0.5}; // RGB
 
 	for (int kX = -1; kX <= 1; kX ++)
 	{
@@ -49,23 +54,21 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 			if (   x + kX >= 0
 				&& x + kX < leds_width
 				&& y + kY >= 0
-				&& y + kY < leds_height
-				&& !(kX == 0 && kY == 0))
+				&& y + kY < leds_height)
 			{
 				for (uint colour = 0; colour < colour_width; colour++)
 				{
-					averagePosition[colour] += input[y + kY][x + kX][colour];
+					force[colour] += (input[y + kY][x + kX][colour] - input[y][x][colour]) * springStiffness[kY+1][kX+1];
 				}
 			}
 		}
 	}
 
-	for (int i = 0; i < colour_width; i++)
+	for (int colour = 0; colour < colour_width; colour++)
 	{
-		averagePosition[i] /= 8;
-		float acceleration = (averagePosition[i] - input[x][y][i]) * propagationConstants[i];
-		velocity[x][y][i] += acceleration - (velocity[x][y][i] * dampingConstants[i]);
-		output[x][y][i] = input[x][y][i] + velocity[x][y][i];
+		float acceleration = force[colour] * propagationConstants[colour];
+		velocity[x][y][colour] += acceleration - (velocity[x][y][colour] * dampingConstants[colour]);
+		output[x][y][colour] = input[x][y][colour] + velocity[x][y][colour];
 	}
 
 }
