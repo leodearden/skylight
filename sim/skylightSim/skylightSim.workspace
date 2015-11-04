@@ -2,8 +2,8 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="skylightSim">
 		<Project filename="skylightSim.cbp" active="1">
-			<Depends filename="../../../libs/openFrameworksCompiled/project/linux64/libopenFrameworks.cbp" />
+			<Depends filename="../openFrameworks/libs/openFrameworksCompiled/project/linux64/libopenFrameworks.cbp" />
 		</Project>
-		<Project filename="../../../libs/openFrameworksCompiled/project/linux64/libopenFrameworks.cbp" />
+		<Project filename="../openFrameworks/libs/openFrameworksCompiled/project/linux64/libopenFrameworks.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

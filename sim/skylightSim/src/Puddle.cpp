@@ -20,8 +20,8 @@ void Puddle::tick()
 	for (uint y = 0; y < leds_height; y++)
 		for (uint x = 0; x < leds_width; x++)
 		{
-			propagate(colour_map, result, x, y);
-			accelerate(colour_map[y][x], velocity_map[y][x]);
+			propagate(colour_map, result, velocity_map, x, y);
+			//accelerate(colour_map[y][x], velocity_map[y][x]);
 		}
 	update_buffers();
 }
@@ -35,13 +35,14 @@ PixelType *Puddle::get_led_representation()
 
 void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 					   float output[leds_width][leds_height][colour_width],
+					   float velocity[leds_width][leds_height][colour_width],
 					   uint x,
 					   uint y)
 {
-	for (uint colour = 0; colour < colour_width; colour++)
-		output[y][x][colour] = input[y][x][colour];
+	float averagePosition[colour_width] = {0};
+	float propagationConstants[colour_width] = {0.1,0.1,0.1}; // RGB
+	float dampingConstants[colour_width] = {0.1,0.1,0.1}; // RGB
 
-	float propagationConstants[colour_width] = {0.5,0.5,0.5,0.5}; // CMYK
 	for (int kX = -1; kX <= 1; kX ++)
 	{
 		for (int kY = -1; kY <= 1; kY ++)
@@ -54,23 +55,32 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 			{
 				for (uint colour = 0; colour < colour_width; colour++)
 				{
-					output[y][x][colour] += input[y + kY][x + kX][colour] * propagationConstants[colour];
+					averagePosition[colour] += input[y + kY][x + kX][colour];
 				}
 			}
 		}
 	}
+
+	for (int i = 0; i < colour_width; i++)
+	{
+		averagePosition[i] /= 8;
+		float acceleration = input[x][y][i] - averagePosition[i] * propagationConstants[i];
+		velocity[x][y][i] += acceleration - (velocity[x][y][i] * dampingConstants[i]);
+		output[x][y][i] = input[x][y][i] + velocity[x][y][i];
+	}
+
 }
 
 void Puddle::accelerate(float* pixel, float* velocity)
 {
-	float freq = 0.5;
+	float freq = 0.1;
 	float f1 = (2 * 3.14 * freq);
 
 	for (uint colour = 0; colour < colour_width; colour++)
 	{
 		float val = pixel[colour];
 		float x = val > 0 ? val : val * -1;
-		float a = -1 * f1 * f1 * x;
+		float a = -1 * f1 * f1 * val;
 
 		velocity[colour] += a;
 
@@ -78,12 +88,11 @@ void Puddle::accelerate(float* pixel, float* velocity)
 	}
 }
 
-void Puddle::set_pixel(PixelType C, PixelType M, PixelType Y, PixelType K, uint x, uint y)
+void Puddle::set_pixel(PixelType C, PixelType M, PixelType Y, uint x, uint y)
 {
 	colour_map[y][x][0] = C;
 	colour_map[y][x][1] = M;
 	colour_map[y][x][2] = Y;
-	colour_map[y][x][3] = K;
 }
 
 void Puddle::update_buffers()

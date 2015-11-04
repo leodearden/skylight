@@ -27,7 +27,7 @@ public:
 
 private:
 	typedef uint8_t PixelType;
-	PixelType leds[leds_width][leds_height][4];
+	PixelType leds[leds_width][leds_height][3];
 	ofImage image;
 
 	uint ux;
