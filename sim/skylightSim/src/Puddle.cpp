@@ -38,8 +38,13 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 					   uint x,
 					   uint y)
 {
+	float springStiffness[3][3] = {
+		{0.10355, 0.14644, 0.10355},
+		{0.14644, 0, 0.14644},
+		{0.10355, 0.14644, 0.10355}
+    };
 	float averagePosition[colour_width] = {0};
-	float propagationConstants[colour_width] = {0.11,0.1,0.09}; // RGB
+	float propagationConstants[colour_width] = {0.1,0.1,0.1}; // RGB
 	float dampingConstants[colour_width] = {0.001,0.001,0.001}; // RGB
 
 	for (int kX = -1; kX <= 1; kX ++)
@@ -49,12 +54,11 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 			if (   x + kX >= 0
 				&& x + kX < leds_width
 				&& y + kY >= 0
-				&& y + kY < leds_height
-				&& !(kX == 0 && kY == 0))
+				&& y + kY < leds_height)
 			{
 				for (uint colour = 0; colour < colour_width; colour++)
 				{
-					averagePosition[colour] += input[y + kY][x + kX][colour];
+					averagePosition[colour] += input[y + kY][x + kX][colour] * springStiffness[kX+1][kY+1];
 				}
 			}
 		}
