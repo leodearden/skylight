@@ -41,6 +41,9 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 	float averagePosition[colour_width] = {0};
 	float propagationConstants[colour_width] = {0.11,0.1,0.09}; // RGB
 	float dampingConstants[colour_width] = {0.001,0.001,0.001}; // RGB
+	static const float kernel[kernel_size][kernel_size] = {{1, 1, 1}, \
+				{1, 0, 1}, \
+				{1, 1, 1}};
 
 	for (int kX = -1; kX <= 1; kX ++)
 	{
@@ -54,7 +57,7 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 			{
 				for (uint colour = 0; colour < colour_width; colour++)
 				{
-					averagePosition[colour] += input[y + kY][x + kX][colour];
+					averagePosition[colour] += input[y + kY][x + kX][colour] * kernel[kX+1][kY+1];
 				}
 			}
 		}
