@@ -6,7 +6,7 @@
  */
 
 #include "Puddle.h"
-
+#include <assert.h>
 Puddle::Puddle()
 {
 }
@@ -40,11 +40,10 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 {
 	float averagePosition[colour_width] = {0};
 	float propagationConstants[colour_width] = {0.11,0.1,0.09}; // RGB
-	float dampingConstants[colour_width] = {0.001,0.001,0.001}; // RGB
-	static const float kernel[kernel_size][kernel_size] = {{1, 1, 1}, \
-				{1, 0, 1}, \
-				{1, 1, 1}};
+	float dampingConstants[colour_width] = {0.01,0.01,0.01}; // RGB
+	static const float kernel[kernel_size][kernel_size] = {{1,1,1},{1,0,1},{1,1,1}};
 
+	assert(kernel_size % 2 == 1);
 	for (int kX = -1; kX <= 1; kX ++)
 	{
 		for (int kY = -1; kY <= 1; kY ++)
@@ -52,8 +51,7 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 			if (   x + kX >= 0
 				&& x + kX < leds_width
 				&& y + kY >= 0
-				&& y + kY < leds_height
-				&& !(kX == 0 && kY == 0))
+				&& y + kY < leds_height)
 			{
 				for (uint colour = 0; colour < colour_width; colour++)
 				{
