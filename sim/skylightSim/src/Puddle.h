@@ -8,19 +8,21 @@
 #ifndef SRC_PUDDLE_H_
 #define SRC_PUDDLE_H_
 
+#include <time.h>
 #include "ofMain.h"
 
 typedef uint8_t PixelType;
 
 class Puddle {
 public:
-	static const uint leds_width = 60;
-	static const uint leds_height = 60;
+	static const uint leds_width = 120;
+	static const uint leds_height = 120;
 	static const uint colour_width = 3;
 	static const size_t kernel_size = 5;
 	Puddle();
 	virtual ~Puddle();
 	void tick();
+	void set_light_level(uint8_t level);
 	PixelType *get_led_representation();
 	void set_pixel(float R, float G, float B, uint x, uint y);
 
@@ -36,6 +38,9 @@ private:
 	float colour_map[leds_height][leds_width][colour_width];
 	float result[leds_height][leds_width][colour_width];
 	float velocity_map[leds_height][leds_width][colour_width];
+	float avg_light_level;
+	uint8_t desired_light_level;
+	time_t last_drop;
 };
 
 #endif /* SRC_PUDDLE_H_ */

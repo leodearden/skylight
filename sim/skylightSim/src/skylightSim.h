@@ -7,8 +7,8 @@ class skylightSim : public ofBaseApp{
 
 public:
 
-	static const uint leds_width = 60;
-	static const uint leds_height = 60;
+	static const uint leds_width = 120;
+	static const uint leds_height = 120;
 	static const uint px_per_led = 10;
 
 	void setup();

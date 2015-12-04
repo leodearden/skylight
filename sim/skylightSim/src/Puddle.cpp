@@ -6,8 +6,13 @@
  */
 
 #include "Puddle.h"
+#include <time.h>
 #include <assert.h>
-Puddle::Puddle()
+
+Puddle::Puddle() :
+	avg_light_level(0),
+	desired_light_level(0),
+	last_drop(time(NULL))
 {
 }
 
@@ -17,6 +22,12 @@ Puddle::~Puddle()
 
 void Puddle::tick()
 {
+	if ((avg_light_level < desired_light_level) && (difftime(time(NULL), last_drop) > 3.0))
+	{
+		set_pixel(0x3fff, 0x3fff, 0x3fff, 30, 30);
+		time(&last_drop);
+	}
+
 	for (uint y = 0; y < leds_height; y++)
 		for (uint x = 0; x < leds_width; x++)
 		{
@@ -82,6 +93,8 @@ void Puddle::set_pixel(float R, float G, float B, uint x, uint y)
 
 void Puddle::update_buffers()
 {
+	avg_light_level = 0;
+
 	for (uint y = 0; y < leds_height; y++)
 	{
 		for (uint x = 0; x < leds_width; x++)
@@ -96,7 +109,14 @@ void Puddle::update_buffers()
 					led_representation[y][x][colour] = 255;
 				else
 					led_representation[y][x][colour] = (PixelType) colour_map[y][x][colour];
+
+				avg_light_level += (float) led_representation[y][x][colour] / (leds_height * leds_width * colour_width);
 			}
 		}
 	}
+}
+
+void Puddle::set_light_level(uint8_t level)
+{
+	desired_light_level = level;
 }
