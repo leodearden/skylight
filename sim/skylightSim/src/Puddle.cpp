@@ -118,7 +118,7 @@ void Puddle::update_buffers()
 	}
 }
 
-void Puddle::set_light_level(uint8_t level)
+void Puddle::set_light_level(float level)
 {
 	desired_light_level = level;
 }

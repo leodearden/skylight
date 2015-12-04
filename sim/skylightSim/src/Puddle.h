@@ -22,7 +22,7 @@ public:
 	Puddle();
 	virtual ~Puddle();
 	void tick();
-	void set_light_level(uint8_t level);
+	void set_light_level(float level);
 	PixelType *get_led_representation();
 	void set_pixel(float R, float G, float B, uint x, uint y);
 
@@ -39,7 +39,7 @@ private:
 	float result[leds_height][leds_width][colour_width];
 	float velocity_map[leds_height][leds_width][colour_width];
 	float avg_light_level;
-	uint8_t desired_light_level;
+	float desired_light_level;
 	time_t last_drop;
 };
 
