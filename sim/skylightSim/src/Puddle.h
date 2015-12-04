@@ -15,8 +15,8 @@ typedef uint8_t PixelType;
 
 class Puddle {
 public:
-	static const uint leds_width = 120;
-	static const uint leds_height = 120;
+	static const uint leds_width = 60;
+	static const uint leds_height = 60;
 	static const uint colour_width = 3;
 	static const size_t kernel_size = 5;
 	Puddle();
