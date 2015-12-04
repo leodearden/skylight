@@ -8,12 +8,14 @@
 #include "Puddle.h"
 #include <time.h>
 #include <assert.h>
+#include <stdlib.h>
 
 Puddle::Puddle() :
 	avg_light_level(0),
 	desired_light_level(0),
 	last_drop(time(NULL))
 {
+	srand(time(NULL));
 }
 
 Puddle::~Puddle()
@@ -24,8 +26,8 @@ void Puddle::tick()
 {
 	if ((avg_light_level < desired_light_level) && (difftime(time(NULL), last_drop) > 3.0))
 	{
-		set_pixel(0x3fff, 0x3fff, 0x3fff, 30, 30);
 		time(&last_drop);
+		set_pixel(0xfff, 0xfff, 0xfff, rand() % leds_width, rand() % leds_height);
 	}
 
 	for (uint y = 0; y < leds_height; y++)
