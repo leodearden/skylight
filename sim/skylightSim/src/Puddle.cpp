@@ -24,7 +24,7 @@ Puddle::~Puddle()
 
 void Puddle::tick()
 {
-	if ((avg_light_level < desired_light_level) && (difftime(time(NULL), last_drop) > 3.0))
+	if ((avg_light_level < desired_light_level) && (difftime(time(NULL), last_drop) > 2.0))
 	{
 		time(&last_drop);
 		set_pixel(0xfff, 0xfff, 0xfff, rand() % leds_width, rand() % leds_height);
@@ -52,8 +52,8 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 					   uint y)
 {
 	float averagePosition[colour_width] = {0};
-	float propagationConstants[colour_width] = {0.11,0.1,0.09}; // RGB
-	float dampingConstants[colour_width] = {0.01,0.01,0.01}; // RGB
+	float propagationConstants[colour_width] = {0.0101,0.01,0.0099}; // RGB
+	float dampingConstants[colour_width] = {0.001,0.001,0.001}; // RGB
 	static const float kernel[kernel_size][kernel_size] = {{0,1,1,1,1,1,0},{1,1,2,2,2,1,1},{1,2,2,3,2,2,1},{1,2,3,0,3,2,1},{1,2,2,3,2,2,1},{1,1,2,2,2,1,1},{0,1,1,1,1,1,0}};
     static const int kOffset = kernel_size / 2;
 
