@@ -3,10 +3,12 @@
 //--------------------------------------------------------------
 void skylightSim::setup()
 {
-	ofSetFrameRate(30); // if vertical sync is off, we can go a bit fast... this caps the framerate at 60fps.
+	ofSetFrameRate(60); // if vertical sync is off, we can go a bit fast... this caps the framerate at 60fps.
 	memset(leds, 0xff, sizeof(leds));
 	whitening = false;
-	puddle.set_pixel(0x3fff, 0x3fff, 0x3fff, 30, 30);
+	puddle.set_light_level(50);
+	puddle.set_min_drop_interval(0.01);
+	puddle.set_drop_colour(0xff,0xff,0xff);
 }
 
 //--------------------------------------------------------------
