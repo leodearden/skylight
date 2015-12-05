@@ -15,9 +15,9 @@ Puddle::Puddle() :
 	avg_light_level(0),
 	desired_light_level(0),
 	min_drop_interval(1),
+	std_dev(0),
 	last_drop(time(NULL)),
-	use_random_colours(true),
-	std_dev(0)
+	use_random_colours(true)
 {
 	srand(time(NULL));
 	init_propagation_constants();
