@@ -26,6 +26,7 @@ public:
 	void set_min_drop_interval(double interval);
 	PixelType *get_led_representation();
 	void set_pixel(double R, double G, double B, uint x, uint y);
+	void set_drop_colour(double R, double G, double B);
 
 private:
 	void propagate(double input[leds_height][leds_width][colour_width],
@@ -41,10 +42,12 @@ private:
 	double result[leds_height][leds_width][colour_width];
 	double velocity_map[leds_height][leds_width][colour_width];
 	double kernel[kernel_size][kernel_size];
+	double drop_colours[colour_width];
 	double avg_light_level;
 	double desired_light_level;
 	double min_drop_interval;
 	time_t last_drop;
+	bool use_random_colours;
 };
 
 #endif /* SRC_PUDDLE_H_ */

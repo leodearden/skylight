@@ -14,6 +14,7 @@ Puddle::Puddle() :
 	avg_light_level(0),
 	desired_light_level(0),
 	min_drop_interval(1),
+	use_random_colours(true),
 	last_drop(time(NULL))
 {
 	srand(time(NULL));
@@ -29,8 +30,15 @@ void Puddle::tick()
 	if ((avg_light_level < desired_light_level) && (difftime(time(NULL), last_drop) > min_drop_interval))
 	{
 		time(&last_drop);
-		int intensity = rand() % 2048;
-		set_pixel(intensity, intensity, intensity, rand() % leds_width, rand() % leds_height);
+		if (use_random_colours)
+		{
+			set_pixel(rand() % 2048, rand() % 2048, rand() % 2048, rand() % leds_width, rand() % leds_height);
+		}
+		else
+		{
+			double intensity = (rand() % 2048) / 255.0;
+			set_pixel(drop_colours[0] * intensity, drop_colours[1] * intensity, drop_colours[2] * intensity, rand() % leds_width, rand() % leds_height);
+		}
 	}
 
 	for (uint y = 0; y < leds_height; y++)
@@ -129,6 +137,21 @@ void Puddle::set_min_drop_interval(double interval)
 	min_drop_interval = interval;
 }
 
+void Puddle::set_drop_colour(double R, double G, double B)
+{
+	if (R == 0 && G == 0 && B == 0)
+	{
+		use_random_colours = true;
+	}
+
+	else
+	{
+		use_random_colours = false;
+		drop_colours[0] = R;
+		drop_colours[1] = G;
+		drop_colours[2] = B;
+	}
+}
 
 void Puddle::init_propagation_constants()
 {
