@@ -9,7 +9,6 @@
 #include <time.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 Puddle::Puddle() :
 	avg_light_level(0),
@@ -54,8 +53,8 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 					   uint y)
 {
 	float averagePosition[colour_width] = {0};
-	float propagationConstants[colour_width] = {0.0101,0.01,0.0099}; // RGB
-	float dampingConstants[colour_width] = {0.001,0.001,0.001}; // RGB
+	float propagationConstants[colour_width] = {0.101,0.1,0.099}; // RGB
+	float dampingConstants[colour_width] = {0.002,0.002,0.002}; // RGB
 	static const int kOffset = kernel_size / 2;
 
 	assert(kernel_size % 2 == 1);
@@ -136,7 +135,6 @@ void Puddle::init_propagation_constants()
 			float dx = abs(x - k_centre);
 			float dy = abs(y - k_centre);
 			float offset_squared = (dx * dx) + (dy * dy);
-			printf("x %d y %d dx %f dy %f offset %f\n", x, y, dx, dy, offset_squared);
 			kernel[x][y] = 1 / offset_squared;
 
 			if (x == k_centre && y == k_centre)
@@ -154,9 +152,7 @@ void Puddle::init_propagation_constants()
 		for (int y = 0; y < kernel_size; y++)
 		{
 			kernel[x][y] /= total;
-			printf("%f ", kernel[x][y]);
 		}
-		printf("\n");
 	}
 
 
