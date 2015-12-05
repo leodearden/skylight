@@ -78,9 +78,9 @@ void Puddle::propagate(double input[leds_width][leds_height][colour_width],
 
 	for (int i = 0; i < colour_width; i++)
 	{
-		double acceleration = (averagePosition[i] - input[x][y][i]) * propagationConstants[i];
-		velocity[x][y][i] += acceleration - (velocity[x][y][i] * dampingConstants[i]);
-		output[x][y][i] = input[x][y][i] + velocity[x][y][i];
+		double acceleration = (averagePosition[i] - input[y][x][i]) * propagationConstants[i];
+		velocity[y][x][i] += acceleration - (velocity[y][x][i] * dampingConstants[i]);
+		output[y][x][i] = input[y][x][i] + velocity[y][x][i];
 	}
 
 }
@@ -136,12 +136,12 @@ void Puddle::init_propagation_constants()
 			double dx = abs(x - k_centre);
 			double dy = abs(y - k_centre);
 			double offset_squared = (dx * dx) + (dy * dy);
-			kernel[x][y] = 1 / offset_squared;
+			kernel[y][x] = 1 / offset_squared;
 
 			if (x == k_centre && y == k_centre)
-				kernel[x][y] = 0;
+				kernel[y][x] = 0;
 
-			total += kernel[x][y];
+			total += kernel[y][x];
 		}
 	}
 
@@ -152,7 +152,7 @@ void Puddle::init_propagation_constants()
 	{
 		for (int y = 0; y < kernel_size; y++)
 		{
-			kernel[x][y] /= total;
+			kernel[y][x] /= total;
 		}
 	}
 
