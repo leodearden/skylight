@@ -9,6 +9,7 @@
 #define SRC_PUDDLE_H_
 
 #include <time.h>
+#include <random>
 #include "ofMain.h"
 
 typedef uint8_t PixelType;
@@ -24,6 +25,7 @@ public:
 	void tick();
 	void set_light_level(float level);
 	void set_min_drop_interval(float interval);
+	void set_std_dev(float val);
 	PixelType *get_led_representation();
 	void set_pixel(float r, float g, float b, uint x, uint y);
 	void set_drop_colour(float r, float g, float b);
@@ -38,6 +40,7 @@ private:
 	void update_buffers();
 	void init_propagation_constants();
 	PixelType led_representation[leds_height][leds_width][colour_width];
+	std::default_random_engine generator;
 	float colour_map[leds_height][leds_width][colour_width];
 	float result[leds_height][leds_width][colour_width];
 	float velocity_map[leds_height][leds_width][colour_width];
@@ -47,6 +50,7 @@ private:
 	float total_light_level;
 	float desired_light_level;
 	float min_drop_interval;
+	float std_dev;
 	time_t last_drop;
 	bool use_random_colours;
 };

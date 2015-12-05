@@ -9,6 +9,7 @@ void skylightSim::setup()
 	puddle.set_light_level(50);
 	puddle.set_min_drop_interval(0.01);
 	puddle.set_drop_colour(0xff,0xff,0xff);
+	puddle.set_std_dev(0x2f);
 }
 
 //--------------------------------------------------------------

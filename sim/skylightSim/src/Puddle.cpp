@@ -32,14 +32,28 @@ void Puddle::tick()
 	if ((avg_light_level < desired_light_level) && (difftime(time(NULL), last_drop) > min_drop_interval))
 	{
 		time(&last_drop);
+		int x = rand() % leds_width;
+		int y = rand() % leds_height;
+
 		if (use_random_colours)
 		{
-			set_pixel(rand() % 2048, rand() % 2048, rand() % 2048, rand() % leds_width, rand() % leds_height);
+			set_pixel(rand() % 2048, rand() % 2048, rand() % 2048, x, y);
+		}
+		else if (std_dev != 0)
+		{
+			std::normal_distribution<float> distribution_r (drop_colours[0], std_dev);
+			std::normal_distribution<float> distribution_g (drop_colours[1], std_dev);
+			std::normal_distribution<float> distribution_b (drop_colours[2], std_dev);
+
+			float intensity = (rand() % 2048) / 255.0; // results in range of 0,2048 for an 0xff colour
+
+			set_pixel(distribution_r(generator) * intensity, distribution_g(generator) * intensity, distribution_b(generator) * intensity, x, y);
 		}
 		else
 		{
 			float intensity = (rand() % 2048) / 255.0;
-			set_pixel(drop_colours[0] * intensity, drop_colours[1] * intensity, drop_colours[2] * intensity, rand() % leds_width, rand() % leds_height);
+
+			set_pixel(drop_colours[0] * intensity, drop_colours[1] * intensity, drop_colours[2] * intensity, x, y);
 		}
 	}
 
@@ -145,6 +159,11 @@ void Puddle::set_light_level(float level)
 void Puddle::set_min_drop_interval(float interval)
 {
 	min_drop_interval = interval;
+}
+
+void Puddle::set_std_dev(float val)
+{
+	std_dev = val;
 }
 
 void Puddle::set_drop_colour(float r, float g, float b)
