@@ -28,7 +28,8 @@ void Puddle::tick()
 	if ((avg_light_level < desired_light_level) && (difftime(time(NULL), last_drop) > 2.0))
 	{
 		time(&last_drop);
-		set_pixel(0xfff, 0xfff, 0xfff, rand() % leds_width, rand() % leds_height);
+		int intensity = rand() % 2048;
+		set_pixel(intensity, intensity, intensity, rand() % leds_width, rand() % leds_height);
 	}
 
 	for (uint y = 0; y < leds_height; y++)
