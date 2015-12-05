@@ -23,6 +23,7 @@ public:
 	virtual ~Puddle();
 	void tick();
 	void set_light_level(double level);
+	void set_min_drop_interval(double interval);
 	PixelType *get_led_representation();
 	void set_pixel(double R, double G, double B, uint x, uint y);
 
@@ -42,6 +43,7 @@ private:
 	double kernel[kernel_size][kernel_size];
 	double avg_light_level;
 	double desired_light_level;
+	double min_drop_interval;
 	time_t last_drop;
 };
 

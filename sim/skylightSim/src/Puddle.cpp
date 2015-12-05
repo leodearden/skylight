@@ -13,6 +13,7 @@
 Puddle::Puddle() :
 	avg_light_level(0),
 	desired_light_level(0),
+	min_drop_interval(1),
 	last_drop(time(NULL))
 {
 	srand(time(NULL));
@@ -25,7 +26,7 @@ Puddle::~Puddle()
 
 void Puddle::tick()
 {
-	if ((avg_light_level < desired_light_level) && (difftime(time(NULL), last_drop) > 2.0))
+	if ((avg_light_level < desired_light_level) && (difftime(time(NULL), last_drop) > min_drop_interval))
 	{
 		time(&last_drop);
 		int intensity = rand() % 2048;
@@ -54,8 +55,8 @@ void Puddle::propagate(double input[leds_width][leds_height][colour_width],
 					   uint y)
 {
 	double averagePosition[colour_width] = {0};
-	double propagationConstants[colour_width] = {0.101,0.1,0.099}; // RGB
-	double dampingConstants[colour_width] = {0.002,0.002,0.002}; // RGB
+	double propagationConstants[colour_width] = {0.0805,0.08,0.0795}; // RGB
+	double dampingConstants[colour_width] = {0.003,0.003,0.003}; // RGB
 	static const int kOffset = kernel_size / 2;
 
 	assert(kernel_size % 2 == 1);
@@ -122,6 +123,12 @@ void Puddle::set_light_level(double level)
 {
 	desired_light_level = level;
 }
+
+void Puddle::set_min_drop_interval(double interval)
+{
+	min_drop_interval = interval;
+}
+
 
 void Puddle::init_propagation_constants()
 {
