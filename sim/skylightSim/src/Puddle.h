@@ -34,10 +34,12 @@ private:
 				   uint y);
 	void accelerate(float* pixel, float* velocity);
 	void update_buffers();
+	void init_propagation_constants();
 	PixelType led_representation[leds_height][leds_width][colour_width];
 	float colour_map[leds_height][leds_width][colour_width];
 	float result[leds_height][leds_width][colour_width];
 	float velocity_map[leds_height][leds_width][colour_width];
+	float kernel[kernel_size][kernel_size];
 	float avg_light_level;
 	float desired_light_level;
 	time_t last_drop;

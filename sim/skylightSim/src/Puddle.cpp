@@ -9,6 +9,7 @@
 #include <time.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 Puddle::Puddle() :
 	avg_light_level(0),
@@ -16,6 +17,7 @@ Puddle::Puddle() :
 	last_drop(time(NULL))
 {
 	srand(time(NULL));
+	init_propagation_constants();
 }
 
 Puddle::~Puddle()
@@ -54,8 +56,7 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 	float averagePosition[colour_width] = {0};
 	float propagationConstants[colour_width] = {0.0101,0.01,0.0099}; // RGB
 	float dampingConstants[colour_width] = {0.001,0.001,0.001}; // RGB
-	static const float kernel[kernel_size][kernel_size] = {{0,1,1,1,1,1,0},{1,1,2,2,2,1,1},{1,2,2,3,2,2,1},{1,2,3,0,3,2,1},{1,2,2,3,2,2,1},{1,1,2,2,2,1,1},{0,1,1,1,1,1,0}};
-    static const int kOffset = kernel_size / 2;
+	static const int kOffset = kernel_size / 2;
 
 	assert(kernel_size % 2 == 1);
 	for (int kX = -kOffset; kX <= kOffset; kX ++)
@@ -77,7 +78,6 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 
 	for (int i = 0; i < colour_width; i++)
 	{
-		averagePosition[i] /= kernel_size * kernel_size + 24;
 		float acceleration = (averagePosition[i] - input[x][y][i]) * propagationConstants[i];
 		velocity[x][y][i] += acceleration - (velocity[x][y][i] * dampingConstants[i]);
 		output[x][y][i] = input[x][y][i] + velocity[x][y][i];
@@ -121,4 +121,43 @@ void Puddle::update_buffers()
 void Puddle::set_light_level(float level)
 {
 	desired_light_level = level;
+}
+
+void Puddle::init_propagation_constants()
+{
+	float total;
+	int k_centre = kernel_size / 2;
+
+	// calculate weightings via inverse square law
+	for (int x = 0; x < kernel_size; x++)
+	{
+		for (int y = 0; y < kernel_size; y++)
+		{
+			float dx = abs(x - k_centre);
+			float dy = abs(y - k_centre);
+			float offset_squared = (dx * dx) + (dy * dy);
+			printf("x %d y %d dx %f dy %f offset %f\n", x, y, dx, dy, offset_squared);
+			kernel[x][y] = 1 / offset_squared;
+
+			if (x == k_centre && y == k_centre)
+				kernel[x][y] = 0;
+
+			total += kernel[x][y];
+		}
+	}
+
+	printf("total = %f\n", total);
+
+	// normalise
+	for (int x = 0; x < kernel_size; x++)
+	{
+		for (int y = 0; y < kernel_size; y++)
+		{
+			kernel[x][y] /= total;
+			printf("%f ", kernel[x][y]);
+		}
+		printf("\n");
+	}
+
+
 }
