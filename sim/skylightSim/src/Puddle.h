@@ -18,35 +18,35 @@ public:
 	static const uint leds_width = 60;
 	static const uint leds_height = 60;
 	static const uint colour_width = 3;
-	static const size_t kernel_size = 59;
+	static const size_t kernel_size = 29;
 	Puddle();
 	virtual ~Puddle();
 	void tick();
-	void set_light_level(double level);
-	void set_min_drop_interval(double interval);
+	void set_light_level(float level);
+	void set_min_drop_interval(float interval);
 	PixelType *get_led_representation();
-	void set_pixel(double r, double g, double b, uint x, uint y);
-	void set_drop_colour(double r, double g, double b);
+	void set_pixel(float r, float g, float b, uint x, uint y);
+	void set_drop_colour(float r, float g, float b);
 
 private:
-	void propagate(double input[leds_height][leds_width][colour_width],
-			   	   double output[leds_height][leds_width][colour_width],
-				   double velocity[leds_width][leds_height][colour_width],
+	void propagate(float input[leds_height][leds_width][colour_width],
+			   	   float output[leds_height][leds_width][colour_width],
+				   float velocity[leds_width][leds_height][colour_width],
 				   uint x,
 				   uint y);
-	void accelerate(double* pixel, double* velocity);
+	void accelerate(float* pixel, float* velocity);
 	void update_buffers();
 	void init_propagation_constants();
 	PixelType led_representation[leds_height][leds_width][colour_width];
-	double colour_map[leds_height][leds_width][colour_width];
-	double result[leds_height][leds_width][colour_width];
-	double velocity_map[leds_height][leds_width][colour_width];
-	double kernel[kernel_size][kernel_size];
-	double drop_colours[colour_width];
-	double avg_light_level;
-	double total_light_level;
-	double desired_light_level;
-	double min_drop_interval;
+	float colour_map[leds_height][leds_width][colour_width];
+	float result[leds_height][leds_width][colour_width];
+	float velocity_map[leds_height][leds_width][colour_width];
+	float kernel[kernel_size][kernel_size];
+	float drop_colours[colour_width];
+	float avg_light_level;
+	float total_light_level;
+	float desired_light_level;
+	float min_drop_interval;
 	time_t last_drop;
 	bool use_random_colours;
 };

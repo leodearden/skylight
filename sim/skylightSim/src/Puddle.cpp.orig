@@ -36,7 +36,7 @@ void Puddle::tick()
 		}
 		else
 		{
-			float intensity = (rand() % 2048) / 255.0;
+			double intensity = (rand() % 2048) / 255.0;
 			set_pixel(drop_colours[0] * intensity, drop_colours[1] * intensity, drop_colours[2] * intensity, rand() % leds_width, rand() % leds_height);
 		}
 	}
@@ -59,16 +59,27 @@ PixelType *Puddle::get_led_representation()
 	return &led_representation[0][0][0];
 }
 
-void Puddle::propagate(float input[leds_width][leds_height][colour_width],
-					   float output[leds_width][leds_height][colour_width],
-					   float velocity[leds_width][leds_height][colour_width],
+void Puddle::propagate(double input[leds_width][leds_height][colour_width],
+					   double output[leds_width][leds_height][colour_width],
+					   double velocity[leds_width][leds_height][colour_width],
 					   uint x,
 					   uint y)
 {
-	float average_position[colour_width] = {0};
-	float propagation_constants[colour_width] = {0.0805,0.08,0.0795}; // RGB
-	float damping_constants[colour_width] = {0.003,0.003,0.003}; // RGB
+<<<<<<< HEAD
+	float force[colour_width] = {0};
+	float springStiffness[3][3] = {
+			{0.10355, 0.14644, 0.10355},
+			{0.14644, 0, 0.14644},
+			{0.10355, 0.14644, 0.10355}
+	};
+	float propagationConstants[colour_width] = {0.11,0.1,0.09}; // RGB
+	float dampingConstants[colour_width] = {0.5,0.5,0.5}; // RGB
+=======
+	double average_position[colour_width] = {0};
+	double propagation_constants[colour_width] = {0.0805,0.08,0.0795}; // RGB
+	double damping_constants[colour_width] = {0.003,0.003,0.003}; // RGB
 	static const int kOffset = kernel_size / 2;
+>>>>>>> kernelExpand
 
 	assert(kernel_size % 2 == 1);
 	for (int kX = -kOffset; kX <= kOffset; kX ++)
@@ -82,23 +93,35 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 			{
 				for (uint colour = 0; colour < colour_width; colour++)
 				{
+<<<<<<< HEAD
+					force[colour] += (input[y + kY][x + kX][colour] - input[y][x][colour]) * springStiffness[kY+1][kX+1];
+=======
 					average_position[colour] += input[y + kY][x + kX][colour] * kernel[kX+kOffset][kY+kOffset];
+>>>>>>> kernelExpand
 				}
 			}
 		}
 	}
 
+<<<<<<< HEAD
+	for (int colour = 0; colour < colour_width; colour++)
+	{
+		float acceleration = force[colour] * propagationConstants[colour];
+		velocity[x][y][colour] += acceleration - (velocity[x][y][colour] * dampingConstants[colour]);
+		output[x][y][colour] = input[x][y][colour] + velocity[x][y][colour];
+=======
 	for (uint i = 0; i < colour_width; i++)
 	{
-		float acceleration = (average_position[i] - input[y][x][i]) * propagation_constants[i];
+		double acceleration = (average_position[i] - input[y][x][i]) * propagation_constants[i];
 		velocity[y][x][i] += acceleration - (velocity[y][x][i] * damping_constants[i]);
 		output[y][x][i] = input[y][x][i] + velocity[y][x][i];
+>>>>>>> kernelExpand
 	}
 
 }
 
 
-void Puddle::set_pixel(float r, float g, float b, uint x, uint y)
+void Puddle::set_pixel(double r, double g, double b, uint x, uint y)
 {
 	colour_map[y][x][0] = r;
 	colour_map[y][x][1] = g;
@@ -135,17 +158,17 @@ void Puddle::update_buffers()
 	avg_light_level = total_light_level / (leds_height * leds_width * colour_width);
 }
 
-void Puddle::set_light_level(float level)
+void Puddle::set_light_level(double level)
 {
 	desired_light_level = level;
 }
 
-void Puddle::set_min_drop_interval(float interval)
+void Puddle::set_min_drop_interval(double interval)
 {
 	min_drop_interval = interval;
 }
 
-void Puddle::set_drop_colour(float r, float g, float b)
+void Puddle::set_drop_colour(double r, double g, double b)
 {
 	if (r == 0 && g == 0 && b == 0)
 	{
@@ -163,7 +186,7 @@ void Puddle::set_drop_colour(float r, float g, float b)
 
 void Puddle::init_propagation_constants()
 {
-	float total = 0;
+	double total = 0;
 	int k_centre = kernel_size / 2;
 
 	// calculate weightings via inverse square law
@@ -171,9 +194,9 @@ void Puddle::init_propagation_constants()
 	{
 		for (int y = 0; y < kernel_size; y++)
 		{
-			float dx = abs(x - k_centre);
-			float dy = abs(y - k_centre);
-			float offset_squared = (dx * dx) + (dy * dy);
+			double dx = abs(x - k_centre);
+			double dy = abs(y - k_centre);
+			double offset_squared = (dx * dx) + (dy * dy);
 			kernel[y][x] = 1 / offset_squared;
 
 			if (x == k_centre && y == k_centre)
