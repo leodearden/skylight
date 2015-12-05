@@ -54,9 +54,9 @@ void Puddle::propagate(double input[leds_width][leds_height][colour_width],
 					   uint x,
 					   uint y)
 {
-	double averagePosition[colour_width] = {0};
-	double propagationConstants[colour_width] = {0.0805,0.08,0.0795}; // RGB
-	double dampingConstants[colour_width] = {0.003,0.003,0.003}; // RGB
+	double average_position[colour_width] = {0};
+	double propagation_constants[colour_width] = {0.0805,0.08,0.0795}; // RGB
+	double damping_constants[colour_width] = {0.003,0.003,0.003}; // RGB
 	static const int kOffset = kernel_size / 2;
 
 	assert(kernel_size % 2 == 1);
@@ -71,16 +71,16 @@ void Puddle::propagate(double input[leds_width][leds_height][colour_width],
 			{
 				for (uint colour = 0; colour < colour_width; colour++)
 				{
-					averagePosition[colour] += input[y + kY][x + kX][colour] * kernel[kX+kOffset][kY+kOffset];
+					average_position[colour] += input[y + kY][x + kX][colour] * kernel[kX+kOffset][kY+kOffset];
 				}
 			}
 		}
 	}
 
-	for (int i = 0; i < colour_width; i++)
+	for (uint i = 0; i < colour_width; i++)
 	{
-		double acceleration = (averagePosition[i] - input[y][x][i]) * propagationConstants[i];
-		velocity[y][x][i] += acceleration - (velocity[y][x][i] * dampingConstants[i]);
+		double acceleration = (average_position[i] - input[y][x][i]) * propagation_constants[i];
+		velocity[y][x][i] += acceleration - (velocity[y][x][i] * damping_constants[i]);
 		output[y][x][i] = input[y][x][i] + velocity[y][x][i];
 	}
 
@@ -132,7 +132,7 @@ void Puddle::set_min_drop_interval(double interval)
 
 void Puddle::init_propagation_constants()
 {
-	double total;
+	double total = 0;
 	int k_centre = kernel_size / 2;
 
 	// calculate weightings via inverse square law
