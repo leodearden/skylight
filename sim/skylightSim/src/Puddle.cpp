@@ -46,15 +46,15 @@ PixelType *Puddle::get_led_representation()
 	return &led_representation[0][0][0];
 }
 
-void Puddle::propagate(float input[leds_width][leds_height][colour_width],
-					   float output[leds_width][leds_height][colour_width],
-					   float velocity[leds_width][leds_height][colour_width],
+void Puddle::propagate(double input[leds_width][leds_height][colour_width],
+					   double output[leds_width][leds_height][colour_width],
+					   double velocity[leds_width][leds_height][colour_width],
 					   uint x,
 					   uint y)
 {
-	float averagePosition[colour_width] = {0};
-	float propagationConstants[colour_width] = {0.101,0.1,0.099}; // RGB
-	float dampingConstants[colour_width] = {0.002,0.002,0.002}; // RGB
+	double averagePosition[colour_width] = {0};
+	double propagationConstants[colour_width] = {0.101,0.1,0.099}; // RGB
+	double dampingConstants[colour_width] = {0.002,0.002,0.002}; // RGB
 	static const int kOffset = kernel_size / 2;
 
 	assert(kernel_size % 2 == 1);
@@ -77,7 +77,7 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 
 	for (int i = 0; i < colour_width; i++)
 	{
-		float acceleration = (averagePosition[i] - input[x][y][i]) * propagationConstants[i];
+		double acceleration = (averagePosition[i] - input[x][y][i]) * propagationConstants[i];
 		velocity[x][y][i] += acceleration - (velocity[x][y][i] * dampingConstants[i]);
 		output[x][y][i] = input[x][y][i] + velocity[x][y][i];
 	}
@@ -85,7 +85,7 @@ void Puddle::propagate(float input[leds_width][leds_height][colour_width],
 }
 
 
-void Puddle::set_pixel(float R, float G, float B, uint x, uint y)
+void Puddle::set_pixel(double R, double G, double B, uint x, uint y)
 {
 	colour_map[y][x][0] = R;
 	colour_map[y][x][1] = G;
@@ -111,20 +111,20 @@ void Puddle::update_buffers()
 				else
 					led_representation[y][x][colour] = (PixelType) colour_map[y][x][colour];
 
-				avg_light_level += (float) led_representation[y][x][colour] / (leds_height * leds_width * colour_width);
+				avg_light_level += (double) led_representation[y][x][colour] / (leds_height * leds_width * colour_width);
 			}
 		}
 	}
 }
 
-void Puddle::set_light_level(float level)
+void Puddle::set_light_level(double level)
 {
 	desired_light_level = level;
 }
 
 void Puddle::init_propagation_constants()
 {
-	float total;
+	double total;
 	int k_centre = kernel_size / 2;
 
 	// calculate weightings via inverse square law
@@ -132,9 +132,9 @@ void Puddle::init_propagation_constants()
 	{
 		for (int y = 0; y < kernel_size; y++)
 		{
-			float dx = abs(x - k_centre);
-			float dy = abs(y - k_centre);
-			float offset_squared = (dx * dx) + (dy * dy);
+			double dx = abs(x - k_centre);
+			double dy = abs(y - k_centre);
+			double offset_squared = (dx * dx) + (dy * dy);
 			kernel[x][y] = 1 / offset_squared;
 
 			if (x == k_centre && y == k_centre)

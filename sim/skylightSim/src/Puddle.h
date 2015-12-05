@@ -22,26 +22,26 @@ public:
 	Puddle();
 	virtual ~Puddle();
 	void tick();
-	void set_light_level(float level);
+	void set_light_level(double level);
 	PixelType *get_led_representation();
-	void set_pixel(float R, float G, float B, uint x, uint y);
+	void set_pixel(double R, double G, double B, uint x, uint y);
 
 private:
-	void propagate(float input[leds_height][leds_width][colour_width],
-			   	   float output[leds_height][leds_width][colour_width],
-				   float velocity[leds_width][leds_height][colour_width],
+	void propagate(double input[leds_height][leds_width][colour_width],
+			   	   double output[leds_height][leds_width][colour_width],
+				   double velocity[leds_width][leds_height][colour_width],
 				   uint x,
 				   uint y);
-	void accelerate(float* pixel, float* velocity);
+	void accelerate(double* pixel, double* velocity);
 	void update_buffers();
 	void init_propagation_constants();
 	PixelType led_representation[leds_height][leds_width][colour_width];
-	float colour_map[leds_height][leds_width][colour_width];
-	float result[leds_height][leds_width][colour_width];
-	float velocity_map[leds_height][leds_width][colour_width];
-	float kernel[kernel_size][kernel_size];
-	float avg_light_level;
-	float desired_light_level;
+	double colour_map[leds_height][leds_width][colour_width];
+	double result[leds_height][leds_width][colour_width];
+	double velocity_map[leds_height][leds_width][colour_width];
+	double kernel[kernel_size][kernel_size];
+	double avg_light_level;
+	double desired_light_level;
 	time_t last_drop;
 };
 
