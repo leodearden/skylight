@@ -9,13 +9,15 @@
 #include <time.h>
 #include <assert.h>
 #include <stdlib.h>
+#include<random>
 
 Puddle::Puddle() :
 	avg_light_level(0),
 	desired_light_level(0),
 	min_drop_interval(1),
+	last_drop(time(NULL)),
 	use_random_colours(true),
-	last_drop(time(NULL))
+	std_dev(0)
 {
 	srand(time(NULL));
 	init_propagation_constants();
