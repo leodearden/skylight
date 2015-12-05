@@ -42,10 +42,13 @@ void Puddle::tick()
 	}
 
 	for (uint y = 0; y < leds_height; y++)
+	{
 		for (uint x = 0; x < leds_width; x++)
 		{
 			propagate(colour_map, result, velocity_map, x, y);
 		}
+	}
+
 	update_buffers();
 }
 
@@ -95,16 +98,16 @@ void Puddle::propagate(double input[leds_width][leds_height][colour_width],
 }
 
 
-void Puddle::set_pixel(double R, double G, double B, uint x, uint y)
+void Puddle::set_pixel(double r, double g, double b, uint x, uint y)
 {
-	colour_map[y][x][0] = R;
-	colour_map[y][x][1] = G;
-	colour_map[y][x][2] = B;
+	colour_map[y][x][0] = r;
+	colour_map[y][x][1] = g;
+	colour_map[y][x][2] = b;
 }
 
 void Puddle::update_buffers()
 {
-	avg_light_level = 0;
+	total_light_level = 0;
 
 	for (uint y = 0; y < leds_height; y++)
 	{
@@ -114,17 +117,22 @@ void Puddle::update_buffers()
 			{
 				colour_map[y][x][colour] = result[y][x][colour];
 
+				// only display the top half of the wave for now
 				if (colour_map[y][x][colour] < 0)
 					led_representation[y][x][colour] = 0;
+
 				else if (colour_map[y][x][colour] > 255)
 					led_representation[y][x][colour] = 255;
+
 				else
 					led_representation[y][x][colour] = (PixelType) colour_map[y][x][colour];
 
-				avg_light_level += (double) led_representation[y][x][colour] / (leds_height * leds_width * colour_width);
+				total_light_level += led_representation[y][x][colour];
 			}
 		}
 	}
+
+	avg_light_level = total_light_level / (leds_height * leds_width * colour_width);
 }
 
 void Puddle::set_light_level(double level)
@@ -137,9 +145,9 @@ void Puddle::set_min_drop_interval(double interval)
 	min_drop_interval = interval;
 }
 
-void Puddle::set_drop_colour(double R, double G, double B)
+void Puddle::set_drop_colour(double r, double g, double b)
 {
-	if (R == 0 && G == 0 && B == 0)
+	if (r == 0 && g == 0 && b == 0)
 	{
 		use_random_colours = true;
 	}
@@ -147,9 +155,9 @@ void Puddle::set_drop_colour(double R, double G, double B)
 	else
 	{
 		use_random_colours = false;
-		drop_colours[0] = R;
-		drop_colours[1] = G;
-		drop_colours[2] = B;
+		drop_colours[0] = r;
+		drop_colours[1] = g;
+		drop_colours[2] = b;
 	}
 }
 

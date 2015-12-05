@@ -25,8 +25,8 @@ public:
 	void set_light_level(double level);
 	void set_min_drop_interval(double interval);
 	PixelType *get_led_representation();
-	void set_pixel(double R, double G, double B, uint x, uint y);
-	void set_drop_colour(double R, double G, double B);
+	void set_pixel(double r, double g, double b, uint x, uint y);
+	void set_drop_colour(double r, double g, double b);
 
 private:
 	void propagate(double input[leds_height][leds_width][colour_width],
@@ -44,6 +44,7 @@ private:
 	double kernel[kernel_size][kernel_size];
 	double drop_colours[colour_width];
 	double avg_light_level;
+	double total_light_level;
 	double desired_light_level;
 	double min_drop_interval;
 	time_t last_drop;
